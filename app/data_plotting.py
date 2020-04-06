@@ -4,22 +4,25 @@ import plotly.graph_objs as go
 import json
 import os
 
-data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+data_dir = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'data'))
 csv_dir = os.path.join(data_dir, 'csv')
-csv_data = os.path.join(csv_dir, '20200311-175101-dxy-2019ncov-data.csv')
+csv_data = os.path.join(csv_dir, '20200322-141025-dxy-2019ncov-data.csv')
 covid19_data = pd.read_csv(csv_data, sep='|', skiprows=2)
 covid19_data.drop(['notes', 'sources'], axis=1, inplace=True)
 covid19_data.columns = ['region', 'confirmed_cases', 'deaths']
 covid19_data.drop(covid19_data.tail(1).index, inplace=True)
-print(covid19_data)
+
 json_dir = os.path.join(data_dir, 'json')
 geojson_file = os.path.join(json_dir, 'china_geojson.json')
 with open(geojson_file) as file:
     china = json.load(file)
     file.close()
 
-maps_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'maps'))
-confirmed_cases_map = os.path.join(maps_dir, 'china-corona-virus-confirmed-cases.html')
+maps_dir = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'maps'))
+confirmed_cases_map = os.path.join(
+    maps_dir, 'china-corona-virus-confirmed-cases.html')
 fig = go.Figure(go.Choroplethmapbox(geojson=china, locations=covid19_data.region, z=covid19_data.confirmed_cases,
                                     colorscale='Jet',
                                     zmin=0, zmax=2000,
