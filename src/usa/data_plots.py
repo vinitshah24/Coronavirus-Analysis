@@ -16,12 +16,14 @@ csv_data = os.path.join(csv_dir, 'us-counties.csv')
 df = pd.read_csv(csv_data, sep=',', header=0)
 
 # Filtering by latest date
-df = df.loc[df['date'] == '2020-04-05']
+df = df.loc[df['date'] == '2020-04-06']
 # Filling empty cells
 df = df.fillna(0)
 # Converting the column to int32
-df["fips"] = df["fips"].astype(int)
-print(df)
+#df["fips"] = df["fips"].astype(int)
+# Removing rows where fips is 0
+df = df.loc[df['fips'] != 0]
+df = df.loc[df['state'] == 'New York']
 
 with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
     counties = json.load(response)
@@ -29,7 +31,7 @@ with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-c
 maps_dir = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..\..', 'maps')
 )
-result_html = os.path.join(maps_dir, 'usa-counties-coronavirus-heatmap.html')
+result_html = os.path.join(maps_dir, 'ny-counties-coronavirus-heatmap.html')
 
 fig = px.choropleth_mapbox(df,
                            geojson=counties,
@@ -39,7 +41,7 @@ fig = px.choropleth_mapbox(df,
                            color_continuous_scale="Jet",
                            range_color=(0, 30),
                            mapbox_style="carto-positron",
-                           zoom=3, center={"lat": 37.0902, "lon": -95.7129},
+                           zoom=6.0, center={"lat": 42.723, "lon": -75.762},
                            opacity=0.5,
                            labels={'county': 'County', 'state': 'State'}
                            )
@@ -52,7 +54,7 @@ df_state = pd.read_csv(state_data, sep=',', header=0)
 junk_data = pd.read_csv(state_code_data, sep=',', header=0)
 df_code = junk_data[['code', 'state']]
 plot_data = df_state.merge(df_code, on=['state'], how='left')
-plot_data = plot_data.loc[plot_data['date'] == '2020-04-05']
+plot_data = plot_data.loc[plot_data['date'] == '2020-04-06']
 print(plot_data)
 states_plot = os.path.join(maps_dir, 'usa-states-coronavirus-heatmap.html')
 
