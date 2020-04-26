@@ -16,7 +16,7 @@ csv_data = os.path.join(csv_dir, 'us-counties.csv')
 df = pd.read_csv(csv_data, sep=',', header=0)
 
 # Filtering by latest date
-df = df.loc[df['date'] == '2020-04-06']
+df = df.loc[df['date'] == '2020-04-24']
 # Filling empty cells
 df = df.fillna(0)
 # Converting the column to int32
@@ -54,7 +54,7 @@ df_state = pd.read_csv(state_data, sep=',', header=0)
 junk_data = pd.read_csv(state_code_data, sep=',', header=0)
 df_code = junk_data[['code', 'state']]
 plot_data = df_state.merge(df_code, on=['state'], how='left')
-plot_data = plot_data.loc[plot_data['date'] == '2020-04-06']
+plot_data = plot_data.loc[plot_data['date'] == '2020-04-24']
 print(plot_data)
 states_plot = os.path.join(maps_dir, 'usa-states-coronavirus-heatmap.html')
 
