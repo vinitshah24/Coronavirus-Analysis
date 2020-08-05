@@ -6,9 +6,7 @@ import plotly
 import json
 import os
 
-data_dir = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..\..', 'data')
-)
+data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..\..', 'data'))
 usa_data_dir = os.path.join(data_dir, 'usa')
 
 csv_dir = os.path.join(usa_data_dir, 'csv')
@@ -16,21 +14,18 @@ csv_data = os.path.join(csv_dir, 'us-counties.csv')
 df = pd.read_csv(csv_data, sep=',', header=0)
 
 # Filtering by latest date
-df = df.loc[df['date'] == '2020-04-24']
+df = df.loc[df['date'] == '2020-08-04']
 # Filling empty cells
 df = df.fillna(0)
-# Converting the column to int32
-#df["fips"] = df["fips"].astype(int)
 # Removing rows where fips is 0
 df = df.loc[df['fips'] != 0]
 df = df.loc[df['state'] == 'New York']
 
-with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+geojson_url = 'https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json'
+with urlopen(geojson_url) as response:
     counties = json.load(response)
 
-maps_dir = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..\..', 'maps')
-)
+maps_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..\..', 'maps'))
 result_html = os.path.join(maps_dir, 'ny-counties-coronavirus-heatmap.html')
 
 fig = px.choropleth_mapbox(df,
@@ -54,7 +49,7 @@ df_state = pd.read_csv(state_data, sep=',', header=0)
 junk_data = pd.read_csv(state_code_data, sep=',', header=0)
 df_code = junk_data[['code', 'state']]
 plot_data = df_state.merge(df_code, on=['state'], how='left')
-plot_data = plot_data.loc[plot_data['date'] == '2020-04-24']
+plot_data = plot_data.loc[plot_data['date'] == '2020-08-04']
 print(plot_data)
 states_plot = os.path.join(maps_dir, 'usa-states-coronavirus-heatmap.html')
 
@@ -63,6 +58,7 @@ plot_data['text'] = 'State: ' + plot_data['state'].astype(str) + '<br>' + \
     'Deaths: ' + plot_data['deaths'].astype(str)
 
 # Color-scales: https://plotly.com/python/v3/colorscales/
+# Maps Reference: https://plotly.com/python/choropleth-maps/
 fig = go.Figure(data=go.Choropleth(
     locations=plot_data['code'],
     z=plot_data['deaths'],
@@ -92,5 +88,3 @@ fig.update_layout(
 )
 
 plotly.offline.plot(fig, filename=states_plot)
-
-# Reference: https://plotly.com/python/choropleth-maps/

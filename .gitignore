@@ -1,3 +1,6 @@
+#Ignore maps dir (Maps output will be saved here)
+maps/
+
 # VS Code
 .vscode
 
