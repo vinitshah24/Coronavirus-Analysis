@@ -1,9 +1,7 @@
 import pandas as pd
 import os
 
-data_dir = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..\..', 'data')
-)
+data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..\..', 'data'))
 china_data_dir = os.path.join(data_dir, 'china')
 csv_dir = os.path.join(china_data_dir, 'csv')
 
@@ -53,7 +51,6 @@ for found_file in os.listdir(csv_dir):
                     df_merged['confirmed_cases_y']
                 df_merged['deaths'] = df_merged['deaths_x'] + \
                     df_merged['deaths_y']
-                #df_merged.drop(['confirmed_cases_x', 'confirmed_cases_y', 'deaths_x', 'deaths_y'], axis=1, inplace=True)
                 print(df_merged)
         else:
             df2 = pd.read_csv(current_file, sep='|', skiprows=2, header=None,
@@ -64,7 +61,6 @@ for found_file in os.listdir(csv_dir):
             df_merged['confirmed_cases'] = df_merged['confirmed_cases_x'] + \
                 df_merged['confirmed_cases_y']
             df_merged['deaths'] = df_merged['deaths_x'] + df_merged['deaths_y']
-            #df_merged.drop(['confirmed_cases_x', 'confirmed_cases_y', 'deaths_x', 'deaths_y'], axis=1, inplace=True)
             print(df_merged)
 df_merged.drop(['confirmed_cases_x', 'deaths_x'], axis=1, inplace=True)
 df_merged.columns = ['place', 'confirmed_cases', 'deaths']
